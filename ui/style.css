@@ -1,0 +1,33 @@
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--fg:#e6edf3;--dim:#8b949e;--arch:#d2a8ff;--coder:#79c0ff;--tester:#e3b341;--reviewer:#58a6ff;--ci:#3fb950;--red:#f85149;--green:#3fb950}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}
+a{color:var(--coder)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line);gap:16px;flex-wrap:wrap}
+.brand{font-size:20px;font-weight:700}.brand small{font-size:12px;color:var(--dim);font-weight:400;margin-left:8px}.logo{color:var(--arch)}
+.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 10px;text-align:center;min-width:86px}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--dim)}
+.stat.hot b{color:var(--green)}
+.controls{display:flex;align-items:center;gap:12px;padding:8px 18px;border-bottom:1px solid var(--line)}.controls input[type=range]{flex:1;max-width:520px}.spacer{flex:1}
+button,select{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer}
+.pill{background:#1f6feb33;border:1px solid #1f6feb;border-radius:99px;padding:2px 10px;font-size:12px}
+main{display:grid;grid-template-columns:330px 1fr 400px;grid-template-rows:auto auto auto;gap:12px;padding:12px 18px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.panel h2{margin:0 0 8px;font-size:14px}.panel h2 small{color:var(--dim);font-weight:400;margin-left:6px}
+.agents{grid-row:1/2}.board{grid-row:1/2}.log{grid-row:1/3;max-height:880px;display:flex;flex-direction:column}.timeline{grid-column:1/3}.files{grid-column:1/4}
+.agent{display:flex;gap:8px;align-items:center;padding:6px 8px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;transition:background .2s}
+.agent .dot{width:10px;height:10px;border-radius:50%;background:#444;flex:none}.agent.busy .dot{animation:pulse 1s infinite}.agent.busy{background:#ffffff08}
+.agent .name{font-weight:600;width:84px}.agent .task{color:var(--dim);font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.agent .count{font-size:11px;color:var(--dim)}
+@keyframes pulse{50%{opacity:.35}}
+.role-architect .dot,.role-architect.lane{background:var(--arch)}.role-coder .dot{background:var(--coder)}.role-tester .dot{background:var(--tester)}.role-reviewer .dot{background:var(--reviewer)}.role-ci .dot{background:var(--ci)}
+.kanban{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.col{background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:6px;min-height:220px}.col h3{margin:0 0 6px;font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:.05em}
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--dim);border-radius:6px;padding:6px;margin-bottom:6px;font-size:12px}
+.card b{font-size:13px}.card .meta{color:var(--dim);font-size:11px;margin-top:3px}.card .chips{margin-top:4px;display:flex;gap:3px;flex-wrap:wrap}
+.chip{font-size:10px;border-radius:4px;padding:1px 4px;border:1px solid var(--line)}.chip.open{border-color:var(--tester);color:var(--tester)}.chip.claimed{border-color:var(--coder);color:var(--coder)}
+.s-testing{border-left-color:var(--tester)}.s-red{border-left-color:var(--red)}.s-green,.s-reviewing{border-left-color:var(--reviewer)}.s-done{border-left-color:var(--green)}.s-failed{border-left-color:var(--red);opacity:.7}
+#log{overflow:auto;flex:1;font-size:11.5px}.ev{padding:2px 0;border-bottom:1px dashed #30363d55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ev .t{color:var(--dim);display:inline-block;width:52px}.ev .who{display:inline-block;width:74px;font-weight:600}
+.ev.ci-red{color:var(--red)}.ev.ci-green,.ev.done{color:var(--green)}
+#gantt svg{width:100%;display:block}#gantt text{fill:var(--dim);font-size:11px;font-family:ui-monospace,monospace}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}.tabs button{font-size:12px}.tabs button.on{border-color:var(--coder);color:var(--coder)}
+#filebody{max-height:420px;overflow:auto;background:#0d1117;border:1px solid var(--line);border-radius:6px;padding:10px;font-size:12px;margin:0}
+footer{color:var(--dim);font-size:12px;padding:6px 18px 18px}
+@media (max-width:1100px){main{grid-template-columns:1fr}.agents,.board,.log,.timeline,.files{grid-column:auto;grid-row:auto}.kanban{grid-template-columns:repeat(3,1fr)}}
+.card .purpose{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}

@@ -1,0 +1,95 @@
+{
+  "project": "mini-spreadsheet-engine",
+  "modules": [
+    {
+      "id": "cell-address",
+      "file": "cell-address.js",
+      "purpose": "Parses and formats A1-style cell addresses and rectangular cell ranges.",
+      "exports": [
+        "parseAddress(src: string): {column: number, row: number} — throws Error for malformed addresses.",
+        "formatAddress(column: number, row: number): string — throws Error for non-positive or non-integer coordinates.",
+        "parseRange(src: string): {start: {column: number, row: number}, end: {column: number, row: number}} — throws Error for malformed ranges.",
+        "compareAddresses(a: {column: number, row: number}, b: {column: number, row: number}): number — returns a negative number, zero, or a positive number in row-then-column order."
+      ],
+      "deps": [],
+      "acceptance": [
+        "parseAddress('A1') returns {column:1,row:1}.",
+        "parseAddress('AA10') returns {column:27,row:10}.",
+        "parseAddress('1A') throws Error.",
+        "parseRange('B2:D4') returns start {column:2,row:2} and end {column:4,row:4}.",
+        "formatAddress(27,10) returns 'AA10'."
+      ]
+    },
+    {
+      "id": "formula-parser",
+      "file": "formula-parser.js",
+      "purpose": "Tokenizes and parses formulas into a serializable abstract syntax tree.",
+      "exports": [
+        "tokenize(src: string): Array<{type: 'number', value: number} | {type: 'identifier', value: string} | {type: 'operator', value: '+' | '-' | '*' | '/'} | {type: 'lparen', value: '('} | {type: 'rparen', value: ')'} | {type: 'comma', value: ','} | {type: 'colon', value: ':'}> — throws Error on an unknown or malformed token.",
+        "parse(src: string): {type: 'expression', expression: Node} — parses a formula body without the leading '=' and throws Error on invalid syntax; Node is exactly one of {type:'number',value:number}, {type:'ref',address:string}, {type:'range',start:string,end:string}, {type:'binary',operator:'+' | '-' | '*' | '/',left:Node,right:Node}, {type:'call',name:'SUM' | 'AVG' | 'MIN' | 'MAX',argument:Node}."
+      ],
+      "deps": [
+        "cell-address"
+      ],
+      "acceptance": [
+        "parse('1+2*3') yields a binary '*' expression whose left operand is a binary '+' expression.",
+        "parse('(1+2)*3') yields a binary '*' expression whose left operand is a parenthesized '+' expression.",
+        "parse('A1') yields {type:'ref',address:'A1'}.",
+        "parse('SUM(A1:B3)') yields {type:'call',name:'SUM',argument:{type:'range',start:'A1',end:'B3'}}.",
+        "parse('A1 +') throws Error.",
+        "tokenize('@') throws Error."
+      ]
+    },
+    {
+      "id": "formula-evaluator",
+      "file": "formula-evaluator.js",
+      "purpose": "Evaluates parsed formula ASTs against a cell-value provider while enforcing arithmetic and cycle error semantics.",
+      "exports": [
+        "evaluate(ast: {type: 'expression', expression: Node}, readCell: (address: string) => number | string | {type: 'formula', source: string} | {type: 'error', value: string}): number | string | {type: 'error', value: string} — returns the computed value or an error record; Node has exactly the shape documented by formula-parser.",
+        "collectDependencies(ast: {type: 'expression', expression: Node}): string[] — returns each referenced cell address exactly once in first-occurrence order.",
+        "normalizeRange(start: string, end: string): string[] — returns normalized addresses in row-major order; throws Error for malformed ranges."
+      ],
+      "deps": [
+        "formula-parser",
+        "cell-address"
+      ],
+      "acceptance": [
+        "evaluate(parse('1+2*3'), () => 0) returns 7.",
+        "evaluate(parse('A1+B1'), address => address === 'A1' ? 2 : 3) returns 5.",
+        "evaluate(parse('A1/A2'), address => address === 'A1' ? 1 : 0) returns {type:'error',value:'#DIV/0'}.",
+        "evaluate(parse('SUM(A1:B2)'), address => address === 'A1' ? 1 : address === 'B2' ? 4 : 0) returns 5.",
+        "collectDependencies(parse('A1+B1+A1')) returns ['A1','B1']."
+      ]
+    },
+    {
+      "id": "spreadsheet",
+      "file": "spreadsheet.js",
+      "purpose": "Provides the in-memory spreadsheet API, dependency tracking, recalculation, CSV import/export, and cycle handling.",
+      "exports": [
+        "class Spreadsheet — constructor(options?: {initialCells?: Record<string, number | string>}); setCell(address: string, value: number | string): void — accepts raw values or formulas beginning with '=', throws Error for malformed addresses or invalid values, and schedules dependent recalculation.",
+        "getCell(address: string): number | string | {type: 'error', value: string} — returns the computed value, throws Error for malformed addresses.",
+        "getCellSource(address: string): number | string | {type: 'formula', source: string} | undefined — returns raw content, throws Error for malformed addresses.",
+        "getDependencies(address: string): string[] — returns direct dependents, not transitive dependents; throws Error for malformed addresses.",
+        "recalculate(): void — recomputes all formula cells in dependency order and assigns '#CYCLE' to every cell in each circular-reference cycle.",
+        "toCSV(options?: {delimiter?: string}): string — exports rows 1..maxRow and columns A..maxCol with computed values; empty cells are empty fields.",
+        "fromCSV(src: string, options?: {delimiter?: string}): void — replaces sheet contents with imported raw values/formulas and recalculates.",
+        "clear(): void — removes all cells and dependencies.",
+        "getMaxRow(): number — returns 0 for an empty sheet.",
+        "getMaxColumn(): number — returns 0 for an empty sheet."
+      ],
+      "deps": [
+        "cell-address",
+        "formula-parser",
+        "formula-evaluator"
+      ],
+      "acceptance": [
+        "A new Spreadsheet with setCell('A1', 2), setCell('B1', '=A1*3'), and getCell('B1') returns 6.",
+        "After setCell('A1', 5), getCell('B1') returns 15.",
+        "setCell('A1', '=B1'); setCell('B1', '=A1') causes getCell('A1') and getCell('B1') to return {type:'error',value:'#CYCLE'}.",
+        "A formula referencing an empty cell treats that reference as 0.",
+        "toCSV() after setting A1 to 1 and B1 to '=A1+1' contains the row '1,2'.",
+        "fromCSV('1,=A1+1\\n2,=B1*2') imports raw formulas and computes the dependent cells."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+✔ columnToIndex converts the first and last single-letter columns (1.259963ms)
+✔ columnToIndex converts a multi-letter column label (0.172787ms)
+✔ columnToIndex throws for empty or invalid column labels (0.379055ms)
+✔ indexToColumn converts zero-based indices to canonical column labels (0.153114ms)
+✔ indexToColumn throws for negative or non-integer indices (0.233218ms)
+✔ parseAddress converts spreadsheet addresses to zero-based indices (0.984275ms)
+✔ parseAddress throws for malformed addresses (0.255653ms)
+✔ formatAddress formats zero-based indices as canonical addresses (0.186345ms)
+✔ formatAddress throws for negative or non-integer indices (0.267847ms)
+✔ toCsv encodes rows while preserving formula strings (1.094935ms)
+✔ toCsv rejects ragged rows (0.429578ms)
+✔ toCsv rejects unsupported cell values (0.2222ms)
+✔ fromCsv parses unquoted fields (0.951928ms)
+✔ fromCsv parses quoted fields containing commas and escaped quotes (0.246912ms)
+✔ fromCsv parses embedded newlines and CRLF or LF line endings (0.122793ms)
+✔ fromCsv rejects malformed quoting (0.185473ms)
+✔ evaluates arithmetic according to operator precedence (1.719687ms)
+✔ returns #DIV/0 when dividing by zero (0.438071ms)
+✔ evaluates SUM over an expanded range (0.368054ms)
+✔ evaluates AVG over an expanded range (0.338287ms)
+✔ treats empty cells as zero in arithmetic (0.182937ms)
+✔ propagates existing #DIV/0 and #CYCLE cell values (0.144832ms)
+✔ expands range nodes through evaluateRange (1.044632ms)
+✔ parses multiplication with precedence (2.514449ms)
+✔ parses a cell reference using zero-based indices (0.462686ms)
+✔ parses a SUM call with a range argument (0.261356ms)
+✔ supports the documented aggregate functions (0.463285ms)
+✔ parses unary and binary arithmetic nodes (0.191041ms)
+✔ rejects source that is not a formula (0.519545ms)
+✔ rejects unknown tokens and unsupported functions (0.213249ms)
+✔ rejects malformed references, ranges, and invalid syntax (0.218418ms)
+✔ calculates formula chains and updates dependents when precedents change (2.992752ms)
+✖ marks every cell in a circular dependency as #CYCLE (1.464806ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== '#CYCLE'
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:31:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: '#CYCLE',
+    operator: 'strictEqual'
+  }
+
+✔ coerces empty precedents to zero and reports division by zero (0.402471ms)
+✔ exports computed values while preserving constants (0.363457ms)
+✔ imports CSV as raw values, including formula strings (0.339676ms)
+✔ exposes raw values, computed values, and direct dependencies in source order (0.998254ms)
+✔ recalculates formulas and treats an empty cell as zero (0.218507ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 37
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 173.205033
+
+✖ failing tests:
+
+test at spreadsheet.test.js:23:1
+✖ marks every cell in a circular dependency as #CYCLE (1.464806ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== '#CYCLE'
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:31:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: '#CYCLE',
+    operator: 'strictEqual'
+  }

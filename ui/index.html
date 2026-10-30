@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mozaik Foundry — concurrent software factory</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo">◆</span> Mozaik Foundry <small>concurrent multi-agent software factory on <a href="https://mozaik.jigjoy.ai" target="_blank">Mozaik</a></small></div>
+  <div id="stats" class="stats"></div>
+</header>
+<section class="controls">
+  <span id="mode" class="pill"></span>
+  <button id="play">⏸ pause</button>
+  <label>speed <select id="speed"><option>1</option><option>2</option><option selected>4</option><option>8</option><option>16</option></select>×</label>
+  <input id="scrub" type="range" min="0" max="1000" value="0" />
+  <span id="clock" class="mono">0.0s</span>
+  <span class="spacer"></span>
+  <span id="project" class="mono"></span>
+</section>
+<main>
+  <section class="panel agents"><h2>Agents <small>each one is a Mozaik participant with its own loop</small></h2><div id="agents"></div></section>
+  <section class="panel board"><h2>Shared task board <small>modules · work items · files</small></h2><div id="kanban" class="kanban"></div></section>
+  <section class="panel log"><h2>Event bus <small>every Mozaik SemanticEvent</small></h2><div id="log" class="mono"></div></section>
+  <section class="panel timeline"><h2>Concurrency timeline <small>LLM loops &amp; CI runs overlapping in wall-clock time</small></h2><div id="gantt"></div></section>
+  <section class="panel files"><h2>Generated code <small id="filesnote"></small></h2><div id="filetabs" class="tabs"></div><pre id="filebody" class="mono"></pre></section>
+</main>
+<footer>Built for the JigJoy Mozaik hackathon · <a href="https://github.com/qinheyi/mozaik-foundry" target="_blank">source</a></footer>
+<script src="app.js"></script>
+</body>
+</html>

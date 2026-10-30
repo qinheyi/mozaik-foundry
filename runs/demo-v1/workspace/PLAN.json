@@ -1,0 +1,97 @@
+{
+  "project": "mini-spreadsheet-engine",
+  "modules": [
+    {
+      "id": "cell-address",
+      "file": "cell-address.js",
+      "purpose": "Convert between spreadsheet cell addresses and zero-based row/column indices, and format numeric indices back to canonical addresses.",
+      "exports": [
+        "columnToIndex(column: string): number — throws Error for an empty or invalid column label",
+        "indexToColumn(index: number): string — throws Error for a negative or non-integer index",
+        "parseAddress(address: string): {row: number, column: number} — throws Error for malformed addresses",
+        "formatAddress(row: number, column: number): string — throws Error for negative or non-integer indices"
+      ],
+      "deps": [],
+      "acceptance": [
+        "parseAddress(\"A1\") returns {row:0,column:0}",
+        "parseAddress(\"AA10\") returns {row:9,column:26}",
+        "columnToIndex(\"A\") returns 0 and columnToIndex(\"Z\") returns 25",
+        "formatAddress(9,26) returns \"AA10\""
+      ]
+    },
+    {
+      "id": "formula-parser",
+      "file": "formula-parser.js",
+      "purpose": "Parse formula source into an abstract syntax tree for arithmetic expressions, cell references, ranges, and supported aggregate functions.",
+      "exports": [
+        "parseFormula(source: string): Node — throws Error when source is not a formula or contains an unknown token, unsupported function, malformed reference/range, or invalid syntax",
+        "Node: object — AST node shapes are {type:\"number\",value:number}, {type:\"cell\",row:number,column:number}, {type:\"range\",start:{row:number,column:number},end:{row:number,column:number}}, {type:\"unary\",op:\"+\"|\"-\",operand:Node}, {type:\"binary\",op:\"+\"|\"-\"|\"*\"|\"/\",left:Node,right:Node}, or {type:\"call\",name:\"SUM\"|\"AVG\"|\"MIN\"|\"MAX\",range:Node}"
+      ],
+      "deps": [
+        "cell-address"
+      ],
+      "acceptance": [
+        "parseFormula(\"=1+2*3\") produces a binary multiplication whose right operand is number 6",
+        "parseFormula(\"=A1\") produces a cell node for row 0, column 0",
+        "parseFormula(\"=SUM(A1:B3)\") produces a SUM call with a range node",
+        "parseFormula(\"=A1+\") throws Error"
+      ]
+    },
+    {
+      "id": "formula-evaluator",
+      "file": "formula-evaluator.js",
+      "purpose": "Evaluate parsed formulas against a sheet, including dependency values, range aggregates, empty-cell coercion, and arithmetic error propagation.",
+      "exports": [
+        "evaluateFormula(node: Node, context: {getCell: (row: number, column: number) => unknown, getRange: (start: {row: number, column: number}, end: {row: number, column: number}) => unknown[]}): number|string — returns #DIV/0 for division by zero, propagates existing #CYCLE and #DIV/0 values, and treats empty cells as 0",
+        "evaluateRange(node: Node, context: {getCell: (row: number, column: number) => unknown, getRange: (start: {row: number, column: number}, end: {row: number, column: number}) => unknown[]}): unknown[] — returns the expanded values of a range node"
+      ],
+      "deps": [
+        "formula-parser"
+      ],
+      "acceptance": [
+        "evaluateFormula(parseFormula(\"=1+2*3\"), context) returns 7",
+        "evaluateFormula(parseFormula(\"=A1/0\"), context) returns \"#DIV/0\"",
+        "evaluateFormula(parseFormula(\"=SUM(A1:B2)\"), context with values [1,2,3,4]) returns 10",
+        "evaluateFormula(parseFormula(\"=AVG(A1:B2)\"), context with values [1,2,3,4]) returns 2.5"
+      ]
+    },
+    {
+      "id": "csv-codec",
+      "file": "csv-codec.js",
+      "purpose": "Encode and decode spreadsheet data as CSV, preserving raw cell contents including formula strings.",
+      "exports": [
+        "toCsv(rows: Array<Array<string|number>>): string — throws Error for ragged rows or non-supported values",
+        "fromCsv(src: string): string[][] — parses quoted fields, escaped quotes, embedded commas/newlines, and CRLF or LF line endings; throws Error for malformed quoting"
+      ],
+      "deps": [],
+      "acceptance": [
+        "toCsv([[\"=A1+1\",\"hello\"],[2,\"x\"]]) returns \"=A1+1,hello\\n2,x\"",
+        "fromCsv(\"a,b\\n1,2\") returns [[\"a\",\"b\"],[\"1\",\"2\"]]",
+        "fromCsv(\"\\\"a,b\\\",c\") returns [[\"a,b\",\"c\"]]",
+        "fromCsv(\"\\\"a\\\"\\\"b\\\",c\") returns [[\"a\\\"b\",\"c\"]]"
+      ]
+    },
+    {
+      "id": "spreadsheet",
+      "file": "spreadsheet.js",
+      "purpose": "Provide the in-memory spreadsheet API, dependency tracking, topological recalculation, cycle detection, computed values, and CSV import/export.",
+      "exports": [
+        "class Spreadsheet — constructor() creates an empty sheet; setCell(address: string, rawValue: string|number): void — stores raw input, recalculates dependents, and marks every cell in a cycle as \"#CYCLE\"; getCell(address: string): string|number — returns the raw formula or computed constant value; getComputedValue(address: string): string|number — returns the computed value, treating an empty cell as 0; getRawValue(address: string): string|number|undefined — returns raw input without calculation; getDependencies(address: string): string[] — returns direct precedent addresses in source order; toCsv(): string — exports rows 1..maxRow and columns A..maxCol using computed values, with formulas exported as computed values; fromCsv(src: string): void — replaces the sheet contents with raw CSV fields, treating each field as a number when finite and numeric, otherwise as a string; recalculate(): void — recomputes all formula cells in dependency order and assigns \"#CYCLE\" to every cell participating in a circular dependency"
+      ],
+      "deps": [
+        "cell-address",
+        "formula-parser",
+        "formula-evaluator",
+        "csv-codec"
+      ],
+      "acceptance": [
+        "A sheet with A1=1, B1=\"=A1+1\", C1=\"=B1*2\" has computed values 1, 2, and 4",
+        "Changing A1 to 5 updates B1 to 6 and C1 to 12",
+        "Setting A1=\"=B1\" and B1=\"=A1\" makes both computed values \"#CYCLE\" without throwing",
+        "A formula referencing an empty cell treats it as 0, and \"=A1/0\" computes \"#DIV/0\"",
+        "A sheet containing A1=\"hello\" and B1=2 exports CSV with \"hello,2\"",
+        "Importing CSV containing \"=A1+1\" preserves the raw formula in getRawValue(\"A1\")"
+      ]
+    }
+  ]
+}

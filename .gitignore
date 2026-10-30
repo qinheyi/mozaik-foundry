@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+.vercel/
+runs/*
+!runs/demo/
+!runs/fake/
+!runs/demo-v1/
+runs/*/workspace/.check-*

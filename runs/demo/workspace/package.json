@@ -1,0 +1,8 @@
+{
+  "name": "mini-spreadsheet-engine",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "mozaik-foundry",
+  "version": "0.1.0",
+  "description": "A concurrent multi-agent software factory built on Mozaik: architect, coders, test writer, reviewer and CI share one task board.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "demo": "tsx src/main.ts --spec specs/spreadsheet.md --ui",
+    "replay": "tsx src/main.ts --spec specs/spreadsheet.md --replay runs/demo/cassette.json --ui",
+    "ui": "tsx src/server.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@mozaik-ai/core": "4.2.0",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.6.3"
+  }
+}

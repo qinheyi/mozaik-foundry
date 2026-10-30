@@ -1,0 +1,240 @@
+✔ parseAddress parses a single-letter column and row (1.864302ms)
+✔ parseAddress parses multi-letter columns (0.229185ms)
+✔ parseAddress rejects malformed addresses (0.454104ms)
+✔ formatAddress formats numeric coordinates (0.166261ms)
+✔ formatAddress rejects invalid coordinates (0.166454ms)
+✔ parseRange parses a rectangular range (0.160682ms)
+✔ parseRange rejects malformed ranges (0.153923ms)
+✔ compareAddresses compares in row-then-column order (0.19659ms)
+✔ evaluates arithmetic with standard operator precedence (1.543355ms)
+✔ evaluates cell references using the cell-value provider (0.459323ms)
+✔ returns a division-by-zero error record (1.039474ms)
+✔ SUM evaluates every cell in a range (0.566518ms)
+✔ collectDependencies returns unique references in first-occurrence order (0.274123ms)
+✔ normalizeRange returns addresses in row-major order (0.132364ms)
+✔ normalizeRange throws for malformed range endpoints (0.281921ms)
+✔ tokenize classifies numbers, identifiers, operators, and punctuation (2.049669ms)
+✔ tokenize throws on an unknown token (0.349004ms)
+✔ parse gives multiplication higher precedence than addition (0.349778ms)
+✔ parse respects parentheses (0.223381ms)
+✔ parse produces a reference node for a cell address (0.253291ms)
+✔ parse produces a range argument inside a function call (0.338148ms)
+✔ parse throws for an incomplete binary expression (0.160788ms)
+✖ evaluates formulas and recalculates dependents after an input changes (3.086357ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 6
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:12:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at node:internal/test_runner/harness:255:12
+      at node:internal/process/task_queues:140:7
+      at AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+      at AsyncResource.runMicrotask (node:internal/process/task_queues:137:8) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 6,
+    operator: 'strictEqual'
+  }
+
+✖ treats references to empty cells as zero (0.372485ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 4
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:29:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 4,
+    operator: 'strictEqual'
+  }
+
+✖ marks every cell in a circular reference as a cycle error (2.008288ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   type: 'error',
+  -   value: '#CYCLE'
+  - }
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:39:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { type: 'error', value: '#CYCLE' },
+    operator: 'deepStrictEqual'
+  }
+
+✔ tracks direct dependents without including transitive dependents (0.678383ms)
+✖ exports computed values as CSV (0.666714ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /(^|\n)1,2(\n|$)/. Input:
+  
+  '1,'
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:61:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '1,',
+    expected: /(^|\n)1,2(\n|$)/,
+    operator: 'match'
+  }
+
+✖ imports raw CSV values and formulas, then computes dependent cells (0.614944ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:79:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 2,
+    operator: 'strictEqual'
+  }
+
+✔ validates cell addresses and cell values (0.52211ms)
+✔ clears all cells and reports empty sheet dimensions (0.207205ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 25
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 144.206653
+
+✖ failing tests:
+
+test at spreadsheet.test.js:5:1
+✖ evaluates formulas and recalculates dependents after an input changes (3.086357ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 6
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:12:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at node:internal/test_runner/harness:255:12
+      at node:internal/process/task_queues:140:7
+      at AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+      at AsyncResource.runMicrotask (node:internal/process/task_queues:137:8) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 6,
+    operator: 'strictEqual'
+  }
+
+test at spreadsheet.test.js:23:1
+✖ treats references to empty cells as zero (0.372485ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 4
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:29:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 4,
+    operator: 'strictEqual'
+  }
+
+test at spreadsheet.test.js:32:1
+✖ marks every cell in a circular reference as a cycle error (2.008288ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   type: 'error',
+  -   value: '#CYCLE'
+  - }
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:39:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { type: 'error', value: '#CYCLE' },
+    operator: 'deepStrictEqual'
+  }
+
+test at spreadsheet.test.js:54:1
+✖ exports computed values as CSV (0.666714ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /(^|\n)1,2(\n|$)/. Input:
+  
+  '1,'
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:61:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '1,',
+    expected: /(^|\n)1,2(\n|$)/,
+    operator: 'match'
+  }
+
+test at spreadsheet.test.js:64:1
+✖ imports raw CSV values and formulas, then computes dependent cells (0.614944ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/ai-competition/2026-10-30-jigjoy-mozaik/mozaik-foundry/runs/demo/workspace/spreadsheet.test.js:79:10)
+      at Test.runInAsyncScope (node:async_hooks:206:9)
+      at Test.run (node:internal/test_runner/test:796:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+      at Test.postRun (node:internal/test_runner/test:889:19)
+      at Test.run (node:internal/test_runner/test:835:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:526:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 2,
+    operator: 'strictEqual'
+  }
