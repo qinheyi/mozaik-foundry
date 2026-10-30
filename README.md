@@ -10,7 +10,7 @@ runnable JavaScript package plus a full event log you can replay in a web UI.
 > Built during the JigJoy Mozaik hackathon (Freestyle track). LLM: MiniMax (`MiniMax-M3`) via its
 > OpenAI-compatible endpoint, plugged into Mozaik's own `OpenAIChatCompletions` adapter.
 
-- Live demo (replay of a recorded run, no key needed): **DEPLOY_URL**
+- Live demo (replay of a recorded run, no key needed): **https://mozaik-foundry.vercel.app**
 - Screenshots: [`docs/screenshots/`](docs/screenshots)
 
 ![board](docs/screenshots/01-board-midrun.png)
